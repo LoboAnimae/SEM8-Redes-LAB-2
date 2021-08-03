@@ -5,15 +5,15 @@ class SocketGenerator:
     def __init__(self):
         self.s = None
 
-    def generate_socket(self, family=socket.AF_INET, stream=socket.SOCK_STREAM):
-        self.s = socket.socket(family, stream)
+    def generate_socket(self, family, stream):
+        self.s = socket.socket(family or socket.AF_INET, stream or socket.SOCK_STREAM)
         return self
 
     def accept(self):
         return self.s.accept()
 
-    def bind(self, ip=socket.gethostname(), port=3000):
-        self.s.bind((ip, port))
+    def bind(self, ip, port):
+        self.s.bind((ip or socket.gethostname(), port or 3000))
         return self
 
     def set_queue(self, new_queue):
