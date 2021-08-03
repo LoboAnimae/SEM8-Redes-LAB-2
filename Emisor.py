@@ -5,6 +5,9 @@ Requires the following libraries:
     pickle
     bitarray
 
+ Made with help of
+ https://www.electrically4u.com/hamming-code-with-a-solved-problem/#:~:text=The%20hamming%20code%20uses%20the,information%20bits%20in%20the%20message.&text=For%20example%2C%20if%204%2Dbit,the%20trial%20and%20error%20method.&text=The%20above%20equation%20implies%204%20not%20greater%20than%20or%20equal%20to%207.
+
 """
 
 import random
@@ -165,15 +168,33 @@ class Server:
         self.msg = pickle.dumps( bit_arr )
         return None
 
-    def msg_set( self ):
+    def msg_set( self ) -> bool:
+        """
+        QOL method to show if the message has been set
+
+        :return: True if the message has been set
+        """
         return bool( self.msg )
 
     def enviar_cadena_segura( self, message: str ) -> type( bitarray ):
+        """
+        Converts a single message into a bitarray that can be used to corrupt itself
+
+        :param message: The message to be corrupted
+        :return: The bitarray
+        """
         a = bitarray()
         a.frombytes( bytes( message, self.ENCODING ) )
         return a
 
     def agregar_ruido( self, pure_bitarray ) -> None:
+        """
+        Grabs the reference of the original bitarray and corrupts the bits.
+        Ensures that at least one bit is corrupted.
+
+        :param pure_bitarray: The array to be corrupted
+        :return: None. Bitarray is already in memory.
+        """
         corrupted_at_least_once = False
         corrupted_bits = 0
         while not corrupted_at_least_once:
@@ -186,5 +207,3 @@ class Server:
         print( f'Corrupted a total {corrupted_bits} bits' )
         print( f'New message is {pure_bitarray.tobytes()}' )
 
-# Made with help of
-# https://www.electrically4u.com/hamming-code-with-a-solved-problem/#:~:text=The%20hamming%20code%20uses%20the,information%20bits%20in%20the%20message.&text=For%20example%2C%20if%204%2Dbit,the%20trial%20and%20error%20method.&text=The%20above%20equation%20implies%204%20not%20greater%20than%20or%20equal%20to%207.
