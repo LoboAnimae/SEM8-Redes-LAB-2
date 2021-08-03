@@ -1,59 +1,54 @@
-class Hamming:
-    """
-    According to tutorialspoint.com/error-correcting-codes-hamming-codes
-        Step 1 - Calculation of the number of redundant bits
-        Step 2 - Positioning the redundant bits
-        Step 3 - Calculating the values of each redundant bit
-    """
-    def __init__(self, bit):
-        self.bitarray = bit
-        self.length = len(bit)
-        self.redundant_bits = self.get_redundant_bits()
+import math
+from bitarray import bitarray
 
-    '''
-    Redundancy Bits -> 2 ** P = n + P + 1
-        Where:
-            P -> Number of redundant bits
-            n -> Number of information / Data bits
-    '''
+
+class Hamming:
+
+    def __init__(self, message):
+        """
+        Defining variables to use in the hamming algorithm
+        """
+        self.bitarray = bitarray()
+        self.bitarray.frombytes(bytearray(message.encode()))
+        self.length = len(self.bitarray)
+        self.get_redundant_bits()
+        self.result = None
+
     def get_redundant_bits(self) -> int:
         """
-        Finds P in the formula
-        2^P = n + P + 1
-
-        :return:
-            The Number of Redundant Bits
+        We obtain de redundance bits and assign them to the bitarray
         """
-        n = self.length
-        for P in range(n):
-            if pow(2, P) >= n + P + 1:
-                return P
-
-    def init_bit( self ):
-        final = 0
-        n = self.length
-        for i in range(n):
-            value = 0
-            for j in range(1, n + 1):
-                if j & pow( 2, i ) == pow( 2, i ):
-                    value = value ^ int(self.bitarray[-j])
-
+        parityindex = 1
+        for i in range(len(self.bitarray)):
+            print("Insertando en: " + str(parityindex-1))
+            self.bitarray.insert((parityindex-1), 0)
+            parityindex *= 2
     # Positions that are powers of two get a redundancy bit
+
     def implement_redundant_bits(self, original_bitarray):
-        temporal_bitarray = ''
-        m = 0
-        n = self.length
-        P = self.get_redundant_bits()
+        parityindex = 1
 
-        # DEPRECATED: Length of new won't be this size
-        # for index, bit in enumerate(original_bitarray):
-        for i in range(1, n + P + 1):
-            if pow(2, m) == i:
-                # Shift the current power
-                m += 1
-                # Insert a 0
-                temporal_bitarray += 0
-                continue
-            temporal_bitarray += original_bitarray[i]
+        """
+        Obtaining values for the redundance bits and assigning them
+        """
+        for i in range(int(math.sqrt(len(self.bitarray))) + 1):
+            print('parityindex: ' + ' ' + str(parityindex))
+            ver = 0
+            print("a[" + str(i) + "] = " + str(self.bitarray[i]))
 
-        pass
+            for j in range(parityindex - 1, len(self.bitarray), parityindex*2):
+
+                count = 0
+                for k in range(parityindex):
+                    if((j+count) < len(self.bitarray)):
+                        print("count: " + str(j + count))
+                        print("value: " + str(self.bitarray[j + count]))
+                        ver = (ver + self.bitarray[(j + count)]) % 2
+                        count += 1
+            print('ver: ' + str(ver))
+            self.bitarray[(parityindex-1)] = ver
+            parityindex *= 2
+            self.result = self.bitarray
+            self.message = self.bitarray
+
+        return(self)
