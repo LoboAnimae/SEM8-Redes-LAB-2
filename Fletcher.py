@@ -15,7 +15,7 @@ def perform_mod( ref: list, m ):
 
 
 class Fletcher:
-    def __init__( self, message: str, mod: int = 65535, preferred_length: int = 360 ):
+    def __init__( self, message: str, mod: int = 65535, preferred_length: int = 512 ):
         self.length = len( message )
         self.message = message
         self.user_mod = mod
